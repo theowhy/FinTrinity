@@ -16,34 +16,39 @@ class GUI:
         lbl_username = Label(self.window, text="{} ({})".format(self.fin.user.name, self.fin.user.id))
         lbl_username.grid(sticky=N, column=0, row=row, columnspan=2)
         row += 1
-        lbl_info = Label(self.window, justify=LEFT, text="Select a game in the list:").grid(sticky=W, column=0, row=row,
-                                                                                            columnspan=2)
-        row += 1
 
-        self.select_value = IntVar()
-        self.game_images = []
-        self.checkboxes = []
-        for idx, game in enumerate(self.fin.user.games):
-            cbox = Checkbutton(self.window, text="{} ({})".format(game.title, game.id), variable=self.select_value,
-                               onvalue=idx + 1, offvalue=0, command=self.game_select)
-            cbox.grid(sticky=W, column=1, row=row)
-            self.checkboxes.append(cbox)
-            self.game_images.append(PhotoImage(file=game.image))
+        if len(self.fin.user.games) == 0:
+            self.lbl_info = Label(self.window, text="No game found")
+            self.lbl_info.grid(column=0, row=row, columnspan=2)
+        else:
+            lbl_info = Label(self.window, justify=LEFT, text="Select a game in the list:").grid(sticky=W, column=0, row=row,
+                                                                                                columnspan=2)
             row += 1
 
-        self.game_canvas = Canvas(self.window, width=144, height=80)
-        self.game_image = None
-        self.game_canvas.grid(sticky=E, column=0, row=2, columnspan=1, rowspan=row - 2)
-        row += 1
+            self.select_value = IntVar()
+            self.game_images = []
+            self.checkboxes = []
+            for idx, game in enumerate(self.fin.user.games):
+                cbox = Checkbutton(self.window, text="{} ({})".format(game.title, game.id), variable=self.select_value,
+                                   onvalue=idx + 1, offvalue=0, command=self.game_select)
+                cbox.grid(sticky=W, column=1, row=row)
+                self.checkboxes.append(cbox)
+                self.game_images.append(PhotoImage(file=game.image))
+                row += 1
 
-        self.btn_confirm = Button(self.window, text="Confirm", state=DISABLED, command=self.click_confirm)
-        self.btn_confirm.grid(column=0, row=row, columnspan=2)
-        row += 1
-        self.lbl_info = Label(self.window, text="")
-        self.lbl_info.grid(column=0, row=row, columnspan=2)
+            self.game_canvas = Canvas(self.window, width=144, height=80)
+            self.game_image = None
+            self.game_canvas.grid(sticky=E, column=0, row=2, columnspan=1, rowspan=row - 2)
+            row += 1
 
-        self.select_value.set(1)
-        self.game_select()
+            self.btn_confirm = Button(self.window, text="Confirm", state=DISABLED, command=self.click_confirm)
+            self.btn_confirm.grid(column=0, row=row, columnspan=2)
+            row += 1
+            self.lbl_info = Label(self.window, text="")
+            self.lbl_info.grid(column=0, row=row, columnspan=2)
+
+            self.select_value.set(1)
+            self.game_select()
 
         self.window.mainloop()
 
